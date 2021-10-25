@@ -18,7 +18,7 @@ Error: Bad state: Cannot fire new event. Controller is already firing an event`
                 "data_logs": {
                     ".indexOn": ["isLogged"],
                     ".read": true,
-                    ".write": false,
+                    ".write": true,
                 }
             }
         }
