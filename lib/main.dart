@@ -43,21 +43,20 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-    _logsRef = FirebaseDatabase.instance.reference().child('data_logs');
+    _logsRef = FirebaseDatabase.instance.ref().child('data_logs');
     // fetch the logs which are not logged i.e which have the parameter is_logged = false.
     _logsRef.orderByChild('isLogged').equalTo(false).onValue.listen((event) {
-      Map<dynamic, dynamic> snapshot = event.snapshot.value ?? {};
       List<DataLog> dataLogs = [];
 
       List<String> notLoggedIds = [];
 
-      for (dynamic key in snapshot.keys) {
-        dynamic value = snapshot[key];
+      for (var child in event.snapshot.children) {
+        dynamic value = child.value;
         bool isLogged = value['isLogged'];
         dataLogs.add(DataLog(id: value['id'], isLogged: isLogged));
 
         // add the key to list to set the isLogged to true
-        notLoggedIds.add(key);
+        notLoggedIds.add(child.key!);
       }
 
       if (notLoggedIds.isNotEmpty) {
@@ -109,7 +108,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   // add a new log
   void addNewLog() {
-    String id = _logsRef.push().key;
+    String id = _logsRef.push().key!;
     _logsRef.child(id).set(DataLog(id: id).toMap());
   }
 }
